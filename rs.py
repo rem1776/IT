@@ -5,7 +5,27 @@ import socket
 import sys
 
 
+def loadTable():
+    lines = open("PROJI-DNSRS.txt", "r").readlines()
+    table = {}
+    for line in lines:
+        words = line.split()
+        table[words[0]] = (words[1], words[2])
+    return table
+
+def recvHostnames(conn):
+    msg = ""
+    cNames = []
+    while "***" not in msg:
+        msg = str(conn.recv(100).decode("utf-8"))
+        cNames.append(msg)
+    cNames.pop()
+    return cNames
+
 if __name__ == "__main__":
+
+    # load table from file
+    table = loadTable()
 
     # set up socket and listen for connection
     try:
@@ -16,15 +36,12 @@ if __name__ == "__main__":
     sbinding = ('', port)
     cs.bind(sbinding)
     cs.listen(1)
-
-    # accept connection and recieve hostnames from client
     conn, addr = cs.accept()
-    msg = ""
-    cNames = []
-    while "***" not in msg:
-        msg = str(conn.recv(100).decode("utf-8")))
-        cNames.append(msg)
 
-    #cNames.pop()
-    print(cNames)
+    # get hostnames from client
+    hnList = recvHostnames(conn)
 
+    #lookup hostnames TODO 
+    for name in hnList:
+        res = table.get(name)
+        print(res)

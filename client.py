@@ -12,7 +12,6 @@ if __name__ == "__main__":
         rcs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     except socket.error as err:
         print(err)
-
     port = int(sys.argv[2])
     addr = socket.gethostbyname(sys.argv[1])
     server_binding = (addr, port)
@@ -23,7 +22,5 @@ if __name__ == "__main__":
     nameList = open("PROJI-HNS.txt", "r").readlines()
     for name in nameList:
         rcs.send(name[:-1].encode('utf-8'))
-        time.sleep(1)
-        #respR = rcs.recv(1024).decode()
+        time.sleep(0.1)
     rcs.send("***".encode('utf-8'))
-
