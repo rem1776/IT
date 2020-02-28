@@ -52,3 +52,6 @@ if __name__ == "__main__":
             conn.send((name + " " + res[0] + " " + res[1]).encode("utf-8"))
         else:
             conn.send((TShostname + " NS").encode("utf-8"))
+
+    # close connection
+    cs.close()

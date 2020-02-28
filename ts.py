@@ -41,7 +41,6 @@ if __name__ == "__main__":
 
     # get hostnames from client
     hnList = recvHostnames(conn)
-    print(hnList)
     
     #lookup hostnames and reply, then send end signal
     for name in hnList:
@@ -52,3 +51,6 @@ if __name__ == "__main__":
         else:
             conn.send((name + " - Error:HOST NOT FOUND").encode("utf-8"))
     conn.send("***".encode("utf-8"))
+
+    #close connection
+    cs.close()

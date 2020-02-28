@@ -70,3 +70,8 @@ if __name__ == "__main__":
             time.sleep(0.5)
             resFile.write(msg + "\n")
             msg = tsConn.recv(100).decode("utf-8")
+
+
+    # close connections
+    rcs.close()
+    tsConn.close()
