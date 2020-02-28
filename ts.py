@@ -16,8 +16,9 @@ def loadTable():
 def recvHostnames(conn):
     msg = ""
     cNames = []
-    while "***" not in msg:
-        msg = str(conn.recv(100).decode("utf-8"))
+    while "*" not in msg:
+        msg = str(conn.recv(100).decode("utf-8"))[:-1]
+        print(msg)
         cNames.append(msg)
         time.sleep(0.1)
     cNames.pop()
@@ -41,8 +42,9 @@ if __name__ == "__main__":
 
     # get hostnames from client
     hnList = recvHostnames(conn)
-
-    #lookup hostnames
+    print(hnList)
+    
+    #lookup hostnames and reply, then send end signal
     for name in hnList:
         res = table.get(name)
         time.sleep(0.1)
@@ -50,3 +52,4 @@ if __name__ == "__main__":
             conn.send((name + " " + res[0] + " " + res[1]).encode("utf-8"))
         else:
             conn.send((name + " - Error:HOST NOT FOUND").encode("utf-8"))
+    conn.send("***".encode("utf-8"))

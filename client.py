@@ -27,27 +27,40 @@ if __name__ == "__main__":
     addr = socket.gethostbyname(sys.argv[1])
     server_binding = (addr, port)
     rcs.connect(server_binding)
-    print("Client Connected.")
 
     #read and send hostnames
     nameList = open("PROJI-HNS.txt", "r").readlines()
     for name in nameList:
         rcs.send(name[:-1].encode('utf-8'))
-        time.sleep(0.1)
+        time.sleep(0.05)
     rcs.send("***".encode('utf-8'))
     
     #get replies, write if resolved, send to TS if not
-    resFile = open("RESOLVEDTEST.txt", "w")
+    resFile = open("RESOLVED.txt", "w")
     tsConn = None
+    tsQueries = []
+    tsHostname = "localhost" 
+
     for name in nameList:
         time.sleep(0.1)
         reply = str(rcs.recv(100).decode('utf-8'))
         if(reply[-2:] == 'NS'):
-            #if tsConn == None:
-            #    tsConn = createTSSocket(reply.split()[0])
-            #tsConn.send(name.encode("utf-8"))
-            #TODO
-            print("Sending to ts")
+            tsQueries.append(name)   
+            tsHostname = reply.split()[0]
         else:
             resFile.write(reply + "\n")
-            print("Wrote reply to file")
+
+    # send to TS
+    if(tsQueries != None):
+        tsConn = createTSSocket(tsHostname)
+    for q in tsQueries:
+        tsConn.send(q.encode("utf-8"))
+        time.sleep(0.1)
+    tsConn.send("***".encode("utf-8"))
+    time.sleep(0.1)
+    # send end signal to ts server if connected and receive replies 
+    if tsConn != None:
+        msg = tsConn.recv(100).decode("utf-8")
+        while "***" not in msg:
+            resFile.write(msg + "\n")
+            msg = tsConn.recv(100).decode("utf-8")
