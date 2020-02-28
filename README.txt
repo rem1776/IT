@@ -2,7 +2,7 @@ Internet Technology Project 1
 Ryan Mulhall & Raymond Lin
 rem208 rl512
 
-1. We implemented our recursive client by sending the hostnames and then receiving the responses from the RS program. Then it sends the unresolved hostnames to the TS and receives it's response. For the DNS table, it implements a dictionary with the hostname as a key and stored the IP and flag as a tuple.
+1. We implemented our recursive client by sending the hostnames and then receiving the responses from the RS program. Then it sends the unresolved hostnames to the TS and receives it's response. For the DNS table, both the RS and TS implement a dictionary loaded from the text file with the hostname as a key and stored the IP and flag as a tuple.
 
 2. One aspect of our program is that it does not store the hostnames in RESOLVED.txt in the same order as the hostname file. It resolves the hostnames correctly, but first writes the RS responses to the file and then writes the TS responses.
 
