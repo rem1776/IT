@@ -18,7 +18,6 @@ def recvHostnames(conn):
     cNames = []
     while "*" not in msg:
         msg = str(conn.recv(100).decode("utf-8"))[:-1]
-        print(msg)
         cNames.append(msg)
         time.sleep(0.1)
     cNames.pop()
@@ -47,7 +46,7 @@ if __name__ == "__main__":
     #lookup hostnames and reply, then send end signal
     for name in hnList:
         res = table.get(name)
-        time.sleep(0.1)
+        time.sleep(0.5)
         if res != None and res[1] == 'A':
             conn.send((name + " " + res[0] + " " + res[1]).encode("utf-8"))
         else:

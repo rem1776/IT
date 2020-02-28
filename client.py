@@ -31,10 +31,14 @@ if __name__ == "__main__":
     #read and send hostnames
     nameList = open("PROJI-HNS.txt", "r").readlines()
     for name in nameList:
+        name = name.lower()
         rcs.send(name[:-1].encode('utf-8'))
         time.sleep(0.05)
     rcs.send("***".encode('utf-8'))
     
+    #print(nameList)
+
+
     #get replies, write if resolved, send to TS if not
     resFile = open("RESOLVED.txt", "w")
     tsConn = None
@@ -42,6 +46,7 @@ if __name__ == "__main__":
     tsHostname = "localhost" 
 
     for name in nameList:
+        name = name.lower()
         time.sleep(0.1)
         reply = str(rcs.recv(100).decode('utf-8'))
         if(reply[-2:] == 'NS'):
@@ -49,7 +54,8 @@ if __name__ == "__main__":
             tsHostname = reply.split()[0]
         else:
             resFile.write(reply + "\n")
-
+    
+    time.sleep(1)
     # send to TS
     if(tsQueries != None):
         tsConn = createTSSocket(tsHostname)
@@ -57,10 +63,10 @@ if __name__ == "__main__":
         tsConn.send(q.encode("utf-8"))
         time.sleep(0.1)
     tsConn.send("***".encode("utf-8"))
-    time.sleep(0.1)
     # send end signal to ts server if connected and receive replies 
     if tsConn != None:
         msg = tsConn.recv(100).decode("utf-8")
         while "***" not in msg:
+            time.sleep(0.5)
             resFile.write(msg + "\n")
             msg = tsConn.recv(100).decode("utf-8")
