@@ -41,7 +41,12 @@ if __name__ == "__main__":
     # get hostnames from client
     hnList = recvHostnames(conn)
 
-    #lookup hostnames TODO 
+    #lookup hostnames
     for name in hnList:
         res = table.get(name)
+        time.sleep(0.1)
         print(res)
+        if res != None and res[1] == 'A':
+            conn.send((name + " " + res[0] + " " + res[1]).encode("utf-8"))
+        else:
+            conn.send((name + " TS").encode("utf-8"))

@@ -24,3 +24,9 @@ if __name__ == "__main__":
         rcs.send(name[:-1].encode('utf-8'))
         time.sleep(0.1)
     rcs.send("***".encode('utf-8'))
+    
+    #get replies
+    for name in nameList:
+        time.sleep(0.1)
+        reply = str(rcs.recv(100).decode('utf-8'))
+        print(reply)
