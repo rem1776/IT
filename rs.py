@@ -7,11 +7,12 @@ import sys
 
 def loadTable():
     lines = open("PROJI-DNSRS.txt", "r").readlines()
+    TShostname = lines.pop()
     table = {}
     for line in lines:
         words = line.split()
         table[words[0]] = (words[1], words[2])
-    return table
+    return (table, TShostname)
 
 def recvHostnames(conn):
     msg = ""
@@ -25,7 +26,9 @@ def recvHostnames(conn):
 if __name__ == "__main__":
 
     # load table from file
-    table = loadTable()
+    tableData = loadTable()
+    table = tableData[0]
+    TShostname = tableData[1]
 
     # set up socket and listen for connection
     try:
@@ -45,8 +48,7 @@ if __name__ == "__main__":
     for name in hnList:
         res = table.get(name)
         time.sleep(0.1)
-        print(res)
         if res != None and res[1] == 'A':
             conn.send((name + " " + res[0] + " " + res[1]).encode("utf-8"))
         else:
-            conn.send((name + " TS").encode("utf-8"))
+            conn.send((TShostname + " NS").encode("utf-8"))
